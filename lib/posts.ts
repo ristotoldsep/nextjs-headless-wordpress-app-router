@@ -49,7 +49,7 @@ export async function getPostList(endCursor: string | null = null, taxonomy: { k
 
   const resJson = await graphqlRequest<{ data: { posts?: PostsData } }>(query, token);
 
-  console.log("API Response:", resJson); // Log the API response to inspect it
+  // console.log("API Response:", resJson); // Log the API response to inspect it
 
   if (!resJson.data || !resJson.data.posts) {
     console.error("No posts data returned", resJson); // Log an error message with the full response

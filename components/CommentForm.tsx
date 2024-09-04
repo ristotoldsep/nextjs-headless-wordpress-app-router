@@ -1,5 +1,5 @@
 // /components/CommentForm.tsx
-
+'use client'
 import { useState, FormEvent } from "react";
 
 interface CommentFormProps {

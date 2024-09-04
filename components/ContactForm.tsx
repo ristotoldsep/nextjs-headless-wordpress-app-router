@@ -1,8 +1,10 @@
+'use client'
+
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import Input from "../components/Input";
-import Textarea from "../components/Textarea";
-import Fieldset from "../components/Fieldset";
-import Button from "../components/Button";
+import Input from "./Input";
+import Textarea from "./Textarea";
+import Fieldset from "./Fieldset";
+import Button from "./Button";
 
 interface Field {
   label: string;
@@ -45,7 +47,7 @@ const initialFields: Field[] = [
   },
 ];
 
-const Form: React.FC = () => {
+const ContactForm: React.FC = () => {
   const [fields, setFields] = useState<Field[]>(initialFields);
   const [successMessage, setSuccessMessage] = useState<string>("");
 
@@ -177,4 +179,4 @@ const Form: React.FC = () => {
   );
 };
 
-export default Form;
+export default ContactForm;

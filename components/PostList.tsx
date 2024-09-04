@@ -1,68 +1,35 @@
-// blog/index.tsx
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Head from "next/head";
-import SiteHeader from "@/components/SiteHeader";
-import SiteFooter from "@/components/SiteFooter";
+'use client'
+import { Link } from 'next-view-transitions'
 import Date from "@/components/Date";
 import FeaturedImage from "@/components/FeaturedImage";
 import LoadMore from "@/components/LoadMore";
-import { getPostList } from "@/lib/posts";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { PostsData } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { PostsData, Post } from "@/lib/types";
 
-interface Props {
-  allPosts: PostsData;
+// Define the props interface for PostList
+interface PostListProps {
+  initialPosts: PostsData;
   token: string;
 }
 
-export async function getStaticProps() {
-  const allPosts = await getPostList();
-  const token = process.env.WORDPRESS_AUTH_REFRESH_TOKEN;
+export default function PostList({ initialPosts, token }: PostListProps) {
+    useEffect(() => {
+        AOS.init({
+          duration: 1000, // Animation duration in milliseconds
+          easing: "ease", // Animation easing effect
+          once: false, // Whether animation should happen only once
+        });
+    }, []);
 
-  return {
-    props: {
-      allPosts,
-      token,
-    },
-  };
-}
+    const [posts, setPosts] = useState<PostsData>(initialPosts);
 
-export default function BlogHome({ allPosts, token }: Props) {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000, // Animation duration in milliseconds
-      easing: "ease", // Animation easing effect
-      once: false, // Whether animation should happen only once
-    });
-  }, []);
-
-  const [posts, setPosts] = useState(allPosts);
-
-  return (
-    <>
-      <Head>
-        <title>Blog</title>
-      </Head>
-      <div className="h-[30vh] min-h-[20rem] bg-[url('/home-bg.webp')] relative">
-        <div className="absolute bg-slate-900 inset-0 z-0 opacity-40"></div>
-
-        <SiteHeader className="header-blog-home relative" />
-
-        <h1 className="text-6xl text-center text-slate-100 relative z-10 py-8 mt-8">
-          Blog
-        </h1>
-
-        <p className="relative z-10 text-center text-slate-200 text-2xl">
-          Read our latest articles!
-        </p>
-      </div>
-      <main className="px-8">
+    return (
+        <main className="px-8">
         <section className="container mx-auto lg:max-w-6xl post-list mt-8">
           <ul>
-            {posts.nodes.map((post) => (
+            {posts.nodes.map((post: Post) => (
               <li
                 key={post.slug}
                 className="grid grid-cols-5 gap-8 mb-8"
@@ -110,7 +77,5 @@ export default function BlogHome({ allPosts, token }: Props) {
           </div>
         </section>
       </main>
-      <SiteFooter />
-    </>
-  );
+    )
 }

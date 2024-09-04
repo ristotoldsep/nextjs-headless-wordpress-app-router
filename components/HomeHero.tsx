@@ -1,41 +1,24 @@
+'use client'
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import SiteHeader from "../components/SiteHeader";
-import Link from "next/link";
-import Head from "next/head";
+import { Link } from 'next-view-transitions'
 
+const HomeHero = () => {
+     // Just for animation on scroll
+    useEffect(() => {
+        AOS.init({
+        duration: 1000, // Animation duration in milliseconds
+        easing: "ease", // Animation easing effect
+        once: true, // Whether animation should happen only once
+        });
 
-const Home = () => {
+        return () => {
+        AOS.refresh(); // Clean up AOS when component unmounts
+        };
+    }, []);
 
-  // Just for animation on scroll
-  useEffect(() => {
-    AOS.init({
-      duration: 1000, // Animation duration in milliseconds
-      easing: "ease", // Animation easing effect
-      once: true, // Whether animation should happen only once
-    });
-
-    return () => {
-      AOS.refresh(); // Clean up AOS when component unmounts
-    };
-  }, []);
-
-  return (
-    <>
-      <Head>
-        <title key="pagetitle">NextJS Headless Wordpress</title>
-        <meta
-          name="description"
-          content="Headless Wordpress Site with NextJS front-end"
-          key="metadescription"
-        />
-      </Head>
-      <div className="min-h-screen bg-[url('/home-bg.webp')] relative bg-cover">
-        <div className="absolute bg-slate-900 inset-0 z-0 opacity-40"></div>
-
-        <SiteHeader className="relative" />
-
+    return (
         <main>
           <div className="min-h-[90vh] flex flex-col items-center justify-center z-10 relative px-8">
             <h1
@@ -76,9 +59,7 @@ const Home = () => {
             </div>
           </div>
         </main>
-      </div>
-    </>
-  );
+    )
 }
 
-export default Home;
+export default HomeHero;
