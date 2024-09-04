@@ -5,6 +5,7 @@ import CommentForm from "../../../components/CommentForm";
 import { getPostSlugs, getSinglePost } from "../../../lib/posts";
 import { PostData, Slug } from "../../../lib/types";
 import { getComments } from "../../../lib/comments";
+import { SeoData } from "../../../lib/seo";  // Import the SeoData type
 import { getSeo } from "../../../lib/seo";
 import Date from "../../../components/Date";
 import { Rubik, Roboto_Slab } from 'next/font/google';
@@ -26,25 +27,29 @@ export async function generateStaticParams() {
 
 // Generate metadata for dynamic routes
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-    const seoData = await getSeo('post', params.postSlug);
+    const seoData: SeoData = await getSeo('post', params.postSlug);
+
+    // Safely handle null values in seoData
+    const opengraphImageUrl = seoData?.opengraphImage?.mediaItemUrl || '';  // Safe fallback to an empty string if null
 
     return {
         title: seoData?.title || 'Post',
-        description: seoData?.metaDesc,
+        description: seoData?.metaDesc || '',
         openGraph: {
             title: seoData?.opengraphTitle || 'Post',
             description: seoData?.metaDesc || '',
             locale: 'en_IN',
             siteName: seoData?.opengraphSiteName || '',
-            images: seoData?.opengraphImage?.mediaItemUrl ? [{ url: seoData.opengraphImage.mediaItemUrl }] : [],
+            images: opengraphImageUrl ? [{ url: opengraphImageUrl }] : [],  // Handle missing opengraphImage safely
         },
     };
 }
 
+// Page component using PostPageProps
 export default async function Post({ params }: PostPageProps) {
     const postData = await getSinglePost(params.postSlug);
     const { comments, commentCount } = await getComments(params.postSlug);
-    const seoData = await getSeo('post', params.postSlug);
+    const seoData: SeoData = await getSeo('post', params.postSlug);
 
     // Safely access featured image URL
     let featuredImageUrl = postData.featuredImage?.node.mediaDetails.sizes?.[1]?.sourceUrl || "/home-bg.webp";
@@ -52,6 +57,7 @@ export default async function Post({ params }: PostPageProps) {
     const excerptHtml = postData.excerpt ? { __html: postData.excerpt } : { __html: '' };
     const contentHtml = postData.content ? { __html: postData.content } : { __html: '' };
 
+    // Safely handle the jsonSchema for SEO
     let jsonSchema = seoData?.schema?.raw
         ? seoData.schema.raw.replace(/https:\/\/gatsby.vdisain.dev(?!\/wp-content\/uploads)/g, 'https://nextjs-headless-wordpress-theta.vercel.app/blog')
         : '';

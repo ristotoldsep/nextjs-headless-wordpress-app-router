@@ -1,26 +1,29 @@
+/**
+ * seo.ts
+ */
 import graphqlRequest from "./graphqlRequest";
 
 export interface SeoSchema {
-    raw: string;
+    raw: string | null;  // Allow raw schema to be null
 }
 
 export interface SeoOpengraphImage {
-    mediaItemUrl: string;
+    mediaItemUrl: string | null;  // Allow mediaItemUrl to be null
 }
 
 export interface SeoData {
-    opengraphImage: SeoOpengraphImage;
-    opengraphModifiedTime: string;
-    opengraphPublishedTime: string;
-    opengraphTitle: string;
-    opengraphType: string;
-    opengraphUrl: string;
-    schema: SeoSchema;
-    title: string;
-    metaDesc: string;
-    opengraphSiteName: string;
-    readingTime: string;
-    opengraphPublisher: string;
+    opengraphImage: SeoOpengraphImage | null;  // Allow opengraphImage to be null
+    opengraphModifiedTime: string | null;      // Allow other properties to be null
+    opengraphPublishedTime: string | null;
+    opengraphTitle: string | null;
+    opengraphType: string | null;
+    opengraphUrl: string | null;
+    schema: SeoSchema | null;
+    title: string | null;
+    metaDesc: string | null;
+    opengraphSiteName: string | null;
+    readingTime: string | null;
+    opengraphPublisher: string | null;
 }
 
 interface GraphQLResponse<T> {
@@ -60,10 +63,10 @@ export async function getSeo(pageType: string = 'post', slug: string = '/'): Pro
     };
 
     const getSeo = await graphqlRequest<GraphQLResponse<PageSeoResponse>>(query);
-    const seoData = getSeo.data[pageType].seo;
+    const seoData = getSeo.data[pageType]?.seo || null;
 
-    console.log('seodata...');
-    console.log(seoData.opengraphImage.mediaItemUrl);
+    // Log seoData for debugging purposes
+    // console.log('seodata:', seoData);
 
     return seoData;
 }
