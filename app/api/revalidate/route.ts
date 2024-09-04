@@ -17,16 +17,16 @@ export async function GET(req: NextRequest) {
     // Determine the path based on the 'type' parameter
     switch (type) {
         case 'post':
-            // path = `/blog/${slug}`; // Dynamic path for posts
-            path = '/blog/[postSlug]';
+            path = `/blog/${slug}`; // Dynamic path for posts
+            // path = '/blog/[postSlug]';
             break;
         case 'page':
-            // path = `/${slug}`; // Dynamic path for pages
-            path = '/[pageSlug]';
+            path = `/${slug}`; // Dynamic path for pages
+            // path = '/[pageSlug]';
             break;
         case 'product':
-            // path = `/products/${slug}`; // Dynamic path for products
-            path = '/products/[productSlug]';
+            path = `/products/${slug}`; // Dynamic path for products
+            // path = '/products/[productSlug]';
             break;
         case 'home':
             path = '/blog'; // Static path for home
