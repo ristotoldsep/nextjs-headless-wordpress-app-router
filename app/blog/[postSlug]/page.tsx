@@ -32,10 +32,11 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
         title: seoData?.title || 'Post',
         description: seoData?.metaDesc,
         openGraph: {
-            title: seoData?.opengraphTitle,
-            description: seoData?.metaDesc,
+            title: seoData?.opengraphTitle || 'Post',
+            description: seoData?.metaDesc || '',
             locale: 'en_IN',
-            siteName: seoData?.opengraphSiteName,
+            siteName: seoData?.opengraphSiteName || '',
+            images: seoData?.opengraphImage?.mediaItemUrl ? [{ url: seoData.opengraphImage.mediaItemUrl }] : [],
         },
     };
 }
@@ -45,9 +46,8 @@ export default async function Post({ params }: PostPageProps) {
     const { comments, commentCount } = await getComments(params.postSlug);
     const seoData = await getSeo('post', params.postSlug);
 
-    let featuredImageUrl = postData.featuredImage
-        ? postData.featuredImage.node.mediaDetails.sizes[1].sourceUrl
-        : "/home-bg.webp";
+    // Safely access featured image URL
+    let featuredImageUrl = postData.featuredImage?.node.mediaDetails.sizes?.[1]?.sourceUrl || "/home-bg.webp";
 
     const excerptHtml = postData.excerpt ? { __html: postData.excerpt } : { __html: '' };
     const contentHtml = postData.content ? { __html: postData.content } : { __html: '' };
@@ -100,12 +100,14 @@ export default async function Post({ params }: PostPageProps) {
                             <li key={comment.id} className="pb-4 border-b">
                                 <div className="comment-header flex justify-start items-center">
                                     <div className="py-4">
-                                        <img
-                                            src={comment.author.node.avatar.url}
-                                            width={comment.author.node.avatar.width}
-                                            height={comment.author.node.avatar.height}
-                                            className="rounded-full max-w-[50px] mr-4"
-                                        />
+                                        {comment.author.node.avatar?.url && (
+                                            <img
+                                                src={comment.author.node.avatar.url}
+                                                width={comment.author.node.avatar.width || 50}
+                                                height={comment.author.node.avatar.height || 50}
+                                                className="rounded-full max-w-[50px] mr-4"
+                                            />
+                                        )}
                                     </div>
                                     <div>
                                         <div className="font-bold">{comment.author.node.name}</div>
