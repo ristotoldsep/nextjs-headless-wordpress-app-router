@@ -1,6 +1,7 @@
 // [pageSlug]/page.tsx
 
 import { getPageSlugs, getSinglePage } from "@/lib/pages";
+import UpdateHeaderClass from "@/components/UpdateHeaderClass"; // Import the client component
 
 // Define an interface for the params
 interface PageProps {
@@ -35,6 +36,9 @@ const Page = async ({ params }: PageProps) => {
 
     return (
         <>
+            {/* Use the client-side component to update the headerClass */}
+            <UpdateHeaderClass className="!bg-slate-700" /> {/* Set the desired header class */}
+
             <section className="content-area py-8 pt-[100px] relative">
                 <article>
                     <h1 className="text-6xl text-center text-slate-700 relative py-8">
